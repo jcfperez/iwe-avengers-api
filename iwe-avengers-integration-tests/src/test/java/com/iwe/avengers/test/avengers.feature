@@ -9,3 +9,42 @@ Given path 'avengers','531'
 When method get
 Then status 200
 And match response == {id: '#string', name: 'Iron Man', secretIdentity: 'Tony Stark'} 
+
+Scenario: Create Avenger
+
+Given path 'avengers'
+And request {name:'Iron Man', secretIdentity: 'Tony Stark'} 
+When method post
+Then status 201
+And match response == {id: '#string', name: 'Iron Man', secretIdentity: 'Tony Stark'} 
+
+Scenario: Must return 400 for invalid create payload
+
+Given path 'avengers'
+And request {secretIdentity: 'Tony Stark'} 
+When method post
+Then status 400
+
+Scenario: Delete Avenger by Id
+
+Given path 'avengers','531'
+When method delete
+Then status 204
+
+Scenario: Update Avenger
+
+Given path 'avengers','531'
+And request {name:'Hulk', secretIdentity: 'Doctor Banner'} 
+When method put
+Then status 200
+And match response == {id: '#string', name: 'Hulk', secretIdentity: 'Doctor Banner'} 
+
+Scenario: Must return 400 for invalid create payload when update 
+Given path 'avengers','531'
+And request {secretIdentity: 'Tony Stark'} 
+When method put
+Then status 400
+
+
+
+
