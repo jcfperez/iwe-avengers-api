@@ -33,9 +33,7 @@ public class SearchAvengersHandler implements RequestHandler<Avenger, HandlerRes
 					.setObjectBody(avengerRetrieved.get())
 					.build();
 			
-		}
-		
-		
+		}	
 		
 		throw new AvengerNotFoundException("[NotFound]- Avenger id: " + id);	
 	}
