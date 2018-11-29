@@ -39,26 +39,6 @@ And request {secretIdentity: 'Tony Stark'}
 When method post
 Then status 400
 
-Scenario: Delete Avenger by Id
-
-Given path 'avengers','aaaa-bbbb-cccc-dddd'
-When method delete
-Then status 204
-
-Scenario: Should return not found Avengers when delete
-
-Given path 'avengers','not-found-id'
-When method delete
-Then status 404
-
-Scenario: Update Avenger
-
-Given path 'avengers','aaaa-bbbb-cccc-dddd'
-And request {name:'Hulk', secretIdentity: 'Doctor Banner'} 
-When method put
-Then status 200
-And match response == {id: '#string', name: 'Hulk', secretIdentity: 'Doctor Banner'} 
-
 Scenario: Must return 400 for invalid create payload when update 
 Given path 'avengers','aaaa-bbbb-cccc-dddd'
 And request {secretIdentity: 'Tony Stark'} 
@@ -71,6 +51,47 @@ Given path 'avengers','not-found-id'
 And request {name:'Hulk', secretIdentity: 'Doctor Banner'} 
 When method put
 Then status 404
+
+
+Scenario: Update Avenger
+
+Given path 'avengers'
+And request {name:'Captain', secretIdentity: 'Steve'} 
+When method post
+Then status 201
+
+* def savedAvenger2 = response
+
+Given path 'avengers',savedAvenger2.id
+And request {name:'Captain America', secretIdentity: 'Steve Rogers'} 
+When method put
+Then status 200
+
+* def savedAvenger3 = response
+
+Given path 'avengers',savedAvenger3.id
+When method get
+Then status 200
+And match response == savedAvenger3 
+
+Scenario: Delete Avenger
+
+Given path 'avengers'
+And request {name:'Hulk', secretIdentity: 'Banner'} 
+When method post
+Then status 201
+
+* def savedAvenger = response
+
+Given path 'avengers', savedAvenger.id
+When method delete
+Then status 204
+
+Given path 'avengers',savedAvenger.id
+When method get
+Then status 404
+
+
 
 
 
